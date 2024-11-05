@@ -1,5 +1,6 @@
 import asyncio
 import socket
+import random
 import struct
 from dnslib import DNSHeader, DNSBuffer, DNSQuestion, DNSRecord, RR, TXT, QTYPE
 
@@ -9,7 +10,7 @@ async def handle_request(socket: socket, addr, buffer: DNSBuffer):
     header: DNSHeader = DNSHeader.parse(buffer)
     print(header)
     num_questions = header.q
-    header = DNSHeader(id=header.id, q=num_questions, a=num_questions)
+    header = DNSHeader(id=random.randint(1,65530), q=num_questions, a=num_questions)
     record = DNSRecord(header=header)
     for i in range(0, num_questions):
         q = DNSQuestion.parse(buffer)
