@@ -7,15 +7,19 @@ from dnslib import DNSHeader, DNSBuffer, DNSQuestion, DNSRecord, RR, TXT, QTYPE
 async def handle_request(socket: socket, addr, buffer: DNSBuffer):
     loop = asyncio.get_event_loop()
     header: DNSHeader = DNSHeader.parse(buffer)
+    print(header)
     num_questions = header.q
     header = DNSHeader(id=header.id, q=num_questions, a=num_questions)
     record = DNSRecord(header=header)
     for i in range(0, num_questions):
         q = DNSQuestion.parse(buffer)
-        record.add_question(q)
-        record.add_answer(
-            RR(q.get_qname().label, rtype=QTYPE.TXT, rdata=TXT("1111111111"))
-        )
+        label = q.get_qname().label
+        print(str(label))
+        if q.get_qname().matchSuffix("mtu"):
+            record.add_question(q)
+            record.add_answer(
+                RR(label, rtype=QTYPE.TXT, rdata=TXT("a" * int(label[0])))
+            )
     await loop.sock_sendto(socket, record.pack(), addr)
 
 
