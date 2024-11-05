@@ -18,7 +18,7 @@ async def handle_request(socket: socket, addr, buffer: DNSBuffer):
         if q.get_qname().matchSuffix("cc"):
             record.add_question(q)
             record.add_answer(
-                RR(label, rtype=QTYPE.TXT, rdata=TXT("a" * int(label[0])))
+                RR(label, rtype=QTYPE.TXT, ttl=1, rdata=TXT("a" * int(label[0])))
             )
     await loop.sock_sendto(socket, record.pack(), addr)
 
