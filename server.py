@@ -15,7 +15,7 @@ async def handle_request(socket: socket, addr, buffer: DNSBuffer):
         q = DNSQuestion.parse(buffer)
         label = q.get_qname().label
         print(str(label))
-        if q.get_qname().matchSuffix("mtu"):
+        if q.get_qname().matchSuffix("cc"):
             record.add_question(q)
             record.add_answer(
                 RR(label, rtype=QTYPE.TXT, rdata=TXT("a" * int(label[0])))
